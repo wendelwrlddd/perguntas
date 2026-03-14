@@ -11,49 +11,65 @@ const Dashboard = ({ setView }) => {
     }, []);
 
     return (
-        <div className="dashboard-container">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                <h1 style={{ color: 'var(--primary)' }}>Dashboard de Respostas - Quiz StetiCar</h1>
-                <button onClick={() => setView('quiz')} className="cta-button" style={{ padding: '0.5rem 1rem' }}>Voltar para o Quiz</button>
+        <div className="dashboard-container animate-fade-up">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+                <div>
+                    <h1 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', letterSpacing: '-1px' }}>Dashboard</h1>
+                    <p style={{ color: 'var(--text-secondary)' }}>Resumo das diretrizes configuradas para a IA.</p>
+                </div>
+                <button onClick={() => setView('quiz')} className="cta-button" style={{ background: '#f1f5f9', color: '#1e293b' }}>+ Nova Configuração</button>
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {responses.map((resp, idx) => {
                     const data = resp.respostas || {};
                     return (
-                        <div key={resp.id} className="glass" style={{ padding: '2rem' }}>
-                            <h2 style={{ color: 'var(--primary)', borderBottom: '1px solid #444', paddingBottom: '10px', marginBottom: '20px' }}>
-                                Resposta #{resp.id} - {new Date(resp.created_at).toLocaleString('pt-BR')}
-                            </h2>
-                            
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '30px' }}>
+                        <div key={resp.id} className="response-card" style={{ borderLeft: `6px solid ${resp.source === 'db' ? '#22c55e' : '#f59e0b'}` }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.5rem' }}>
                                 <div>
-                                    <h4 style={{ color: '#eee' }}>1. Identidade</h4>
-                                    <p>Nome IA: {data.bloco1?.nomeAssistente}</p>
-                                    
-                                    <h4 style={{ color: '#eee', marginTop: '1rem' }}>2. Boas-vindas</h4>
-                                    <p>{data.bloco2?.boasVindas}</p>
-
-                                    <h4 style={{ color: '#eee', marginTop: '1rem' }}>3. Serviços</h4>
-                                    <p>Extras: {data.bloco3?.novosServicos || 'Nenhum'}</p>
-                                    <p>Detalhamento: {data.bloco3?.descricoesPersonalizadas || 'Nenhum'}</p>
+                                    <span style={{ 
+                                        fontSize: '0.75rem', 
+                                        fontWeight: '800', 
+                                        textTransform: 'uppercase', 
+                                        padding: '4px 10px', 
+                                        background: resp.source === 'db' ? '#dcfce7' : '#fef3c7', 
+                                        color: resp.source === 'db' ? '#166534' : '#92400e',
+                                        borderRadius: '20px',
+                                        marginRight: '10px'
+                                    }}>
+                                        {resp.source === 'db' ? 'Banco de Dados' : 'Backup Local'}
+                                    </span>
+                                    <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>{new Date(resp.created_at).toLocaleString('pt-BR')}</span>
+                                </div>
+                                <h3 style={{ color: 'var(--primary)' }}>{data.bloco1?.nomeAssistente}</h3>
+                            </div>
+                            
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
+                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Personalidade</h4>
+                                    <p style={{ fontWeight: '600' }}>{data.bloco2?.boasVindas}</p>
                                 </div>
                                 
-                                <div>
-                                    <h4 style={{ color: '#eee' }}>4. Encerramento & Horários</h4>
-                                    <p>Mensagem: {data.bloco4?.mensagemEncerramento}</p>
-                                    <p>Horário: {data.bloco4?.horarioOficina}</p>
+                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
+                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Serviços Ativos</h4>
+                                    <p style={{ fontSize: '0.9rem' }}>{data.bloco3?.servicosAtivos?.length || 0} serviços principais</p>
+                                    {data.bloco3?.novosServicos && <p style={{ fontSize: '0.9rem', color: 'var(--primary)', marginTop: '5px' }}>+ {data.bloco3.novosServicos}</p>}
+                                </div>
 
-                                    <h4 style={{ color: '#eee', marginTop: '1rem' }}>5. Situações Especiais</h4>
-                                    <p>Dono: {data.bloco5?.numeroDono}</p>
-                                    <p>Jutaí: {data.bloco5?.numeroJutai}</p>
-                                    <p>Off-topic: {data.bloco5?.respostaOffTopic}</p>
+                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
+                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Atendimento</h4>
+                                    <p style={{ fontSize: '0.9rem' }}>{data.bloco4?.horarioOficina || 'Não definido'}</p>
+                                    <p style={{ fontSize: '0.8rem', color: '#64748b' }}>IA {data.bloco4?.avisoForaHorario ? 'avisa' : 'não avisa'} fora do horário</p>
                                 </div>
                             </div>
                         </div>
                     );
                 })}
-                {responses.length === 0 && <p style={{ textAlign: 'center' }}>Nenhuma resposta registrada ainda.</p>}
+                {responses.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '5rem', background: 'white', borderRadius: '24px', border: '2px dashed #e2e8f0' }}>
+                        <p style={{ color: '#64748b' }}>Ainda não temos respostas salvas.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

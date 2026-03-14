@@ -76,91 +76,115 @@ const App = () => {
 
     return (
         <div className="App">
-            <nav style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h2 style={{ color: 'var(--primary)', fontWeight: '800' }}>STETICAR CONFIG</h2>
-                <button onClick={() => setView('dashboard')} className="cta-button" style={{ padding: '0.5rem 1rem' }}>Ver Dashboard de Respostas</button>
+            <nav style={{ padding: '1.5rem 2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'white', borderBottom: '1px solid #e2e8f0', position: 'sticky', top: 0, zIndex: 100 }}>
+                <h2 style={{ color: 'var(--primary)', fontWeight: '900', fontSize: '1.5rem' }}>STETICAR <span style={{ fontWeight: '300', color: '#64748b' }}>CONFIG</span></h2>
+                <button onClick={() => setView('dashboard')} className="cta-button" style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', background: 'transparent', color: 'var(--primary)', border: '1px solid var(--primary)', boxShadow: 'none' }}>Ver Respostas</button>
             </nav>
 
-            <main className="premium-container" style={{ paddingBottom: '5rem' }}>
+            <main className="premium-container" style={{ paddingTop: '3rem', paddingBottom: '5rem' }}>
                 {!isFinished ? (
-                    <div className="glass" style={{ padding: '3rem', marginTop: '2rem' }}>
-                        <div style={{ marginBottom: '2rem', display: 'flex', gap: '10px' }}>
+                    <div className="glass animate-fade-up" style={{ padding: '3.5rem', marginTop: '1rem' }}>
+                        <div className="progress-container">
                             {[1, 2, 3, 4, 5].map(i => (
-                                <div key={i} style={{ flex: 1, height: '4px', background: step >= i ? 'var(--primary)' : '#333', borderRadius: '2px' }}></div>
+                                <div key={i} className={`progress-step ${step >= i ? 'active' : ''}`}></div>
                             ))}
                         </div>
 
                         {step === 1 && (
-                            <section>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '1.5rem' }}>Bloco 1: Identidade</h3>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>Qual o nome da assistente virtual?</label>
+                            <section className="animate-fade-up">
+                                <h3 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Identidade</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2.5rem' }}>Dê um nome e personalidade para sua assistente.</p>
+                                
+                                <div style={{ marginBottom: '2.5rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: '600', color: '#444' }}>Qual o nome da assistente virtual?</label>
                                     <input 
                                         type="text" 
                                         className="chat-input-field" 
-                                        style={{ width: '100%', padding: '1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px' }}
                                         value={formData.bloco1.nomeAssistente}
                                         onChange={(e) => setFormData({...formData, bloco1: {...formData.bloco1, nomeAssistente: e.target.value}})}
                                         placeholder="Ex: StetiBot"
                                     />
                                 </div>
-                                <button onClick={handleNext} className="cta-button">Continuar</button>
+                                <button onClick={handleNext} className="cta-button">Continuar ➜</button>
                             </section>
                         )}
 
                         {step === 2 && (
-                            <section>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '1.5rem' }}>Bloco 2: Boas-vindas</h3>
-                                <p style={{ marginBottom: '1rem' }}>Escolha uma mensagem de boas-vindas:</p>
-                                {['Opção 1: Olá! Seja bem-vindo à StetiCar.', 'Opção 2: Oi! Tudo bem? Como a StetiCar pode te ajudar hoje?', 'Opção 3: Olá! Sou a assistente virtual da StetiCar. Em que posso ser útil?', 'Opção 4: Bem-vindo à melhor estética automotiva! Como podemos cuidar do seu carro?'].map(opt => (
-                                    <div key={opt} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <input 
-                                            type="radio" 
-                                            name="welcome" 
-                                            checked={formData.bloco2.boasVindas === opt}
-                                            onChange={() => setFormData({...formData, bloco2: {boasVindas: opt}})}
-                                        />
-                                        <label>{opt}</label>
-                                    </div>
-                                ))}
-                                <div style={{ marginTop: '2rem', display: 'flex', gap: '10px' }}>
-                                    <button onClick={handleBack} className="cta-button" style={{ background: '#444' }}>Voltar</button>
+                            <section className="animate-fade-up">
+                                <h3 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Boas-vindas</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Escolha como a IA deve saudar seus clientes.</p>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                                    {['Opção 1: Olá! Seja bem-vindo à StetiCar.', 'Opção 2: Oi! Tudo bem? Como a StetiCar pode te ajudar hoje?', 'Opção 3: Olá! Sou a assistente virtual da StetiCar. Em que posso ser útil?', 'Opção 4: Bem-vindo à melhor estética automotiva! Como podemos cuidar do seu carro?'].map(opt => (
+                                        <label key={opt} style={{ 
+                                            padding: '1.2rem', 
+                                            border: '2px solid', 
+                                            borderColor: formData.bloco2.boasVindas === opt ? 'var(--primary)' : '#e2e8f0',
+                                            borderRadius: '16px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '15px',
+                                            cursor: 'pointer',
+                                            background: formData.bloco2.boasVindas === opt ? 'var(--primary-light)' : 'white',
+                                            transition: 'all 0.2s ease'
+                                        }}>
+                                            <input 
+                                                type="radio" 
+                                                name="welcome" 
+                                                checked={formData.bloco2.boasVindas === opt}
+                                                onChange={() => setFormData({...formData, bloco2: {boasVindas: opt}})}
+                                            />
+                                            <span style={{ fontSize: '1rem', fontWeight: formData.bloco2.boasVindas === opt ? '600' : '400' }}>{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                                
+                                <div style={{ marginTop: '3rem', display: 'flex', gap: '15px' }}>
+                                    <button onClick={handleBack} className="cta-button" style={{ background: '#f1f5f9', color: '#64748b' }}>Voltar</button>
                                     <button onClick={handleNext} className="cta-button">Próximo</button>
                                 </div>
                             </section>
                         )}
 
                         {step === 3 && (
-                            <section>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '1.5rem' }}>Bloco 3: Serviços</h3>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>Personalize a descrição dos serviços (opcional):</label>
+                            <section className="animate-fade-up">
+                                <h3 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Serviços</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Quais serviços sua estética oferece?</p>
+                                
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: '600' }}>Descrição detalhada (opcional):</label>
                                     <textarea 
-                                        style={{ width: '100%', padding: '1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px', minHeight: '100px' }}
+                                        className="chat-input-field"
+                                        style={{ minHeight: '120px' }}
                                         value={formData.bloco3.descricoesPersonalizadas}
                                         onChange={(e) => setFormData({...formData, bloco3: {...formData.bloco3, descricoesPersonalizadas: e.target.value}})}
+                                        placeholder="Ex: Nossa lavagem detalhada usa apenas produtos PH neutro..."
                                     />
                                 </div>
-                                <p style={{ marginBottom: '1rem' }}>Quais destes serviços estão ativos?</p>
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '1.5rem' }}>
+
+                                <label style={{ display: 'block', marginBottom: '1rem', fontWeight: '600' }}>Serviços Ativos:</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px', marginBottom: '2rem' }}>
                                     {formData.bloco3.servicosAtivos.map(s => (
-                                        <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                        <div key={s} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '1rem', background: '#f8fafc', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                                             <input type="checkbox" checked={true} readOnly />
-                                            <label>{s}</label>
+                                            <span style={{ fontSize: '0.9rem' }}>{s}</span>
                                         </div>
                                     ))}
                                 </div>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>Quer adicionar mais algum serviço?</label>
+
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: '600' }}>Adicionar outros serviços:</label>
                                     <input 
                                         type="text" 
-                                        style={{ width: '100%', padding: '1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px' }}
+                                        className="chat-input-field"
                                         value={formData.bloco3.novosServicos}
                                         onChange={(e) => setFormData({...formData, bloco3: {...formData.bloco3, novosServicos: e.target.value}})}
+                                        placeholder="Ex: Vitrificação, Martelinho..."
                                     />
                                 </div>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button onClick={handleBack} className="cta-button" style={{ background: '#444' }}>Voltar</button>
+
+                                <div style={{ display: 'flex', gap: '15px' }}>
+                                    <button onClick={handleBack} className="cta-button" style={{ background: '#f1f5f9', color: '#64748b' }}>Voltar</button>
                                     <button onClick={handleNext} className="cta-button">Próximo</button>
                                 </div>
                             </section>
