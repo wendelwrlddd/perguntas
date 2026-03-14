@@ -12,12 +12,12 @@ const Dashboard = ({ setView }) => {
 
     return (
         <div className="dashboard-container animate-fade-up">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem' }}>
+            <div className="dashboard-header">
                 <div>
-                    <h1 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', letterSpacing: '-1px' }}>Dashboard</h1>
+                    <h1>Dashboard</h1>
                     <p style={{ color: 'var(--text-secondary)' }}>Resumo das diretrizes configuradas para a IA.</p>
                 </div>
-                <button onClick={() => setView('quiz')} className="cta-button" style={{ background: '#f1f5f9', color: '#1e293b' }}>+ Nova Configuração</button>
+                <button onClick={() => setView('quiz')} className="cta-button" style={{ background: '#f1f5f9', color: '#1e293b', width: 'auto' }}>+ Nova Configuração</button>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
@@ -44,7 +44,7 @@ const Dashboard = ({ setView }) => {
                                 <h3 style={{ color: 'var(--primary)' }}>{data.bloco1?.nomeAssistente}</h3>
                             </div>
                             
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+                            <div className="response-grid">
                                 <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
                                     <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Personalidade</h4>
                                     <p style={{ fontWeight: '600' }}>{data.bloco2?.boasVindas}</p>
