@@ -19,7 +19,7 @@ const Dashboard = ({ setView }) => {
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
                 {responses.map((resp, idx) => {
-                    const data = resp.respostas;
+                    const data = resp.respostas || {};
                     return (
                         <div key={resp.id} className="glass" style={{ padding: '2rem' }}>
                             <h2 style={{ color: 'var(--primary)', borderBottom: '1px solid #444', paddingBottom: '10px', marginBottom: '20px' }}>
