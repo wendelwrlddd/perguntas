@@ -44,7 +44,7 @@ function App() {
             </div>
           </section>
 
-          <footer style={{ textAlign: 'center', padding: '5rem', color: var(--text-secondary) }}>
+          <footer style={{ textAlign: 'center', padding: '5rem', color: 'var(--text-secondary)' }}>
             <p>&copy; 2026 StetiCar Estética Automotiva. Todos os direitos reservados.</p>
           </footer>
         </main>
