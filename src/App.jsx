@@ -5,6 +5,7 @@ const App = () => {
     const [view, setView] = useState('quiz'); // quiz ou dashboard
     const [step, setStep] = useState(1);
     const [isFinished, setIsFinished] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     
     const [formData, setFormData] = useState({
         bloco1: { nomeAssistente: '' },
@@ -35,21 +36,28 @@ const App = () => {
     const handleBack = () => setStep(prev => prev - 1);
 
     const handleSubmit = async () => {
+        console.log('Botão clicado, iniciando envio...');
+        setIsLoading(true);
         try {
             const response = await fetch('https://unique-flexibility-production.up.railway.app/api/quiz', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ respostas: formData })
             });
+
             if (response.ok) {
+                console.log('Envio bem-sucedido!');
                 setIsFinished(true);
             } else {
                 const errorData = await response.json();
+                console.error('Erro no servidor:', errorData);
                 alert('Erro do servidor: ' + (errorData.error || 'Erro desconhecido'));
             }
         } catch (error) {
-            console.error('Erro ao enviar quiz:', error);
-            alert('Erro ao enviar respostas. Verifique o servidor.');
+            console.error('Erro de rede/execução:', error);
+            alert('Falha na conexão: ' + error.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -212,7 +220,14 @@ const App = () => {
                                 </div>
                                 <div style={{ display: 'flex', gap: '10px' }}>
                                     <button onClick={handleBack} className="cta-button" style={{ background: '#444' }}>Voltar</button>
-                                    <button onClick={handleSubmit} className="cta-button">Finalizar e Enviar para Dashboard</button>
+                                    <button 
+                                        onClick={handleSubmit} 
+                                        className="cta-button" 
+                                        disabled={isLoading}
+                                        style={{ opacity: isLoading ? 0.5 : 1 }}
+                                    >
+                                        {isLoading ? 'Enviando...' : 'Finalizar e Enviar para Dashboard'}
+                                    </button>
                                 </div>
                             </section>
                         )}
