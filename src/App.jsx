@@ -36,7 +36,7 @@ const App = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch('http://localhost:3001/api/quiz', {
+            const response = await fetch('https://unique-flexibility-production.up.railway.app/api/quiz', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ respostas: formData })

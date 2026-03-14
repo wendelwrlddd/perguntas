@@ -4,7 +4,7 @@ const Dashboard = ({ setView }) => {
     const [responses, setResponses] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3001/api/quiz')
+        fetch('https://unique-flexibility-production.up.railway.app/api/quiz')
             .then(res => res.json())
             .then(data => setResponses(data))
             .catch(err => console.error(err));
