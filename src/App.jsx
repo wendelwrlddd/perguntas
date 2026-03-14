@@ -38,12 +38,19 @@ const App = () => {
     const handleSubmit = async () => {
         console.log('Botão clicado, iniciando envio...');
         setIsLoading(true);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos de timeout
+
         try {
             const response = await fetch('https://unique-flexibility-production.up.railway.app/api/quiz', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ respostas: formData })
+                body: JSON.stringify({ respostas: formData }),
+                signal: controller.signal
             });
+
+            clearTimeout(timeoutId);
 
             if (response.ok) {
                 console.log('Envio bem-sucedido!');
@@ -55,7 +62,11 @@ const App = () => {
             }
         } catch (error) {
             console.error('Erro de rede/execução:', error);
-            alert('Falha na conexão: ' + error.message);
+            if (error.name === 'AbortError') {
+                alert('O servidor demorou muito para responder (Timeout). Tente novamente.');
+            } else {
+                alert('Falha na conexão: ' + error.message);
+            }
         } finally {
             setIsLoading(false);
         }
