@@ -42,10 +42,15 @@ app.post('/api/quiz', (req, res) => {
     const { respostas } = req.body;
     const query = 'INSERT INTO quiz_responses (respostas) VALUES (?)';
     
+    // Verificar se o BD está conectado antes de tentar a query
+    if (db.state === 'disconnected') {
+        return res.status(500).json({ error: 'Banco de dados não conectado' });
+    }
+
     db.query(query, [JSON.stringify(respostas)], (err, result) => {
         if (err) {
             console.error('Erro ao salvar quiz:', err);
-            return res.status(500).json({ error: 'Erro ao salvar dados' });
+            return res.status(500).json({ error: 'Erro ao salvar no banco: ' + err.message });
         }
         res.status(201).json({ message: 'Quiz salvo com sucesso', id: result.insertId });
     });

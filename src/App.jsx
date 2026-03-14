@@ -43,6 +43,9 @@ const App = () => {
             });
             if (response.ok) {
                 setIsFinished(true);
+            } else {
+                const errorData = await response.json();
+                alert('Erro do servidor: ' + (errorData.error || 'Erro desconhecido'));
             }
         } catch (error) {
             console.error('Erro ao enviar quiz:', error);
