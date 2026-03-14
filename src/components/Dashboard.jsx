@@ -45,21 +45,29 @@ const Dashboard = ({ setView }) => {
                             </div>
                             
                             <div className="response-grid">
-                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
-                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Personalidade</h4>
-                                    <p style={{ fontWeight: '600' }}>{data.bloco2?.boasVindas}</p>
+                                <div style={{ background: '#f8fafc', padding: '1.2rem', borderRadius: '16px', border: '1px solid #eef2f6' }}>
+                                    <h4 style={{ color: 'var(--primary)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>Saudação & Identidade</h4>
+                                    <p style={{ fontSize: '0.9rem', marginBottom: '5px' }}><strong>Nome IA:</strong> {data.bloco1?.nomeAssistente || 'Não def.'}</p>
+                                    <p style={{ fontSize: '0.9rem', color: '#475569' }}>"{data.bloco2?.boasVindas}"</p>
                                 </div>
                                 
-                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
-                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Serviços Ativos</h4>
-                                    <p style={{ fontSize: '0.9rem' }}>{data.bloco3?.servicosAtivos?.length || 0} serviços principais</p>
-                                    {data.bloco3?.novosServicos && <p style={{ fontSize: '0.9rem', color: 'var(--primary)', marginTop: '5px' }}>+ {data.bloco3.novosServicos}</p>}
+                                <div style={{ background: '#f8fafc', padding: '1.2rem', borderRadius: '16px', border: '1px solid #eef2f6' }}>
+                                    <h4 style={{ color: 'var(--primary)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>Serviços</h4>
+                                    <p style={{ fontSize: '0.9rem', color: '#444' }}><strong>Adicionais:</strong> {data.bloco3?.novosServicos || 'Nenhum'}</p>
+                                    <p style={{ fontSize: '0.85rem', color: '#64748b', fontStyle: 'italic', marginTop: '5px' }}>{data.bloco3?.descricoesPersonalizadas || 'Sem desc. extra'}</p>
                                 </div>
 
-                                <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: '16px' }}>
-                                    <h4 style={{ color: '#444', fontSize: '0.8rem', textTransform: 'uppercase', marginBottom: '1rem' }}>Atendimento</h4>
-                                    <p style={{ fontSize: '0.9rem' }}>{data.bloco4?.horarioOficina || 'Não definido'}</p>
-                                    <p style={{ fontSize: '0.8rem', color: '#64748b' }}>IA {data.bloco4?.avisoForaHorario ? 'avisa' : 'não avisa'} fora do horário</p>
+                                <div style={{ background: '#f8fafc', padding: '1.2rem', borderRadius: '16px', border: '1px solid #eef2f6' }}>
+                                    <h4 style={{ color: 'var(--primary)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>Atendimento</h4>
+                                    <p style={{ fontSize: '0.9rem' }}><strong>Horário:</strong> {data.bloco4?.horarioOficina || 'Não def.'}</p>
+                                    <p style={{ fontSize: '0.85rem', color: '#64748b' }}><strong>Fim:</strong> {data.bloco4?.mensagemEncerramento}</p>
+                                </div>
+
+                                <div style={{ background: '#f8fafc', padding: '1.2rem', borderRadius: '16px', border: '1px solid #eef2f6' }}>
+                                    <h4 style={{ color: 'var(--primary)', fontSize: '0.75rem', textTransform: 'uppercase', marginBottom: '0.8rem', letterSpacing: '0.5px' }}>Contatos & Especial</h4>
+                                    <p style={{ fontSize: '0.85rem' }}><strong>Dono:</strong> {data.bloco5?.numeroDono || '-'}</p>
+                                    <p style={{ fontSize: '0.85rem' }}><strong>Jutaí:</strong> {data.bloco5?.numeroJutai || '-'}</p>
+                                    <p style={{ fontSize: '0.85rem', color: '#ef4444', marginTop: '5px' }}><strong>Off-topic:</strong> {data.bloco5?.respostaOffTopic || 'Padrão'}</p>
                                 </div>
                             </div>
                         </div>

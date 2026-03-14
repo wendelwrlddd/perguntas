@@ -191,77 +191,101 @@ const App = () => {
                         )}
 
                         {step === 4 && (
-                            <section>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '1.5rem' }}>Bloco 4: Encerramento</h3>
-                                <p style={{ marginBottom: '1rem' }}>Escolha a mensagem de encerramento:</p>
-                                {['Opção 1: Obrigado! Entraremos em contato.', 'Opção 2: Seus dados foram salvos. Aguarde nosso retorno.', 'Opção 3: Perfeito! Já passei seus dados para o Jutaí.'].map(opt => (
-                                    <div key={opt} style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-                                        <input 
-                                            type="radio" 
-                                            name="closing" 
-                                            checked={formData.bloco4.mensagemEncerramento === opt}
-                                            onChange={() => setFormData({...formData, bloco4: {...formData.bloco4, mensagemEncerramento: opt}})}
-                                        />
-                                        <label>{opt}</label>
-                                    </div>
-                                ))}
-                                <div style={{ margin: '1.5rem 0' }}>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem' }}>Qual o horário de atendimento?</label>
+                            <section className="animate-fade-up">
+                                <h3 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Encerramento</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Defina a mensagem final e horários da oficina.</p>
+                                
+                                <label style={{ display: 'block', marginBottom: '1rem', fontWeight: '600' }}>Mensagem de encerramento:</label>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '2rem' }}>
+                                    {['Opção 1: Obrigado! Entraremos em contato.', 'Opção 2: Seus dados foram salvos. Aguarde nosso retorno.', 'Opção 3: Perfeito! Já passei seus dados para o Jutaí.'].map(opt => (
+                                        <label key={opt} style={{ 
+                                            padding: '1.2rem', 
+                                            border: '2px solid', 
+                                            borderColor: formData.bloco4.mensagemEncerramento === opt ? 'var(--primary)' : '#e2e8f0',
+                                            borderRadius: '16px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '15px',
+                                            cursor: 'pointer',
+                                            background: formData.bloco4.mensagemEncerramento === opt ? 'var(--primary-light)' : 'white',
+                                            transition: 'all 0.2s ease'
+                                        }}>
+                                            <input 
+                                                type="radio" 
+                                                name="closing" 
+                                                checked={formData.bloco4.mensagemEncerramento === opt}
+                                                onChange={() => setFormData({...formData, bloco4: {...formData.bloco4, mensagemEncerramento: opt}})}
+                                            />
+                                            <span style={{ fontSize: '1rem', fontWeight: formData.bloco4.mensagemEncerramento === opt ? '600' : '400' }}>{opt}</span>
+                                        </label>
+                                    ))}
+                                </div>
+
+                                <div style={{ marginBottom: '2rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.8rem', fontWeight: '600' }}>Horário de atendimento:</label>
                                     <input 
                                         type="text" 
-                                        style={{ width: '100%', padding: '1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px' }}
+                                        className="chat-input-field"
                                         value={formData.bloco4.horarioOficina}
                                         onChange={(e) => setFormData({...formData, bloco4: {...formData.bloco4, horarioOficina: e.target.value}})}
                                         placeholder="Ex: Seg-Sex 08:00 às 18:00"
                                     />
                                 </div>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button onClick={handleBack} className="cta-button" style={{ background: '#444' }}>Voltar</button>
+
+                                <div style={{ display: 'flex', gap: '15px' }}>
+                                    <button onClick={handleBack} className="cta-button" style={{ background: '#f1f5f9', color: '#64748b' }}>Voltar</button>
                                     <button onClick={handleNext} className="cta-button">Próximo</button>
                                 </div>
                             </section>
                         )}
 
                         {step === 5 && (
-                            <section>
-                                <h3 style={{ color: 'var(--primary)', fontSize: '2rem', marginBottom: '1.5rem' }}>Bloco 5: Situações Especiais</h3>
+                            <section className="animate-fade-up">
+                                <h3 style={{ color: 'var(--text-primary)', fontSize: '2.5rem', fontWeight: '800', marginBottom: '0.5rem', letterSpacing: '-1px' }}>Especiais</h3>
+                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Configurações de contato e exceções.</p>
+
                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '2rem' }}>
                                     <div>
-                                        <label>Número do Dono/Responsável:</label>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>WhatsApp do Dono:</label>
                                         <input 
                                             type="text" 
-                                            style={{ width: '100%', padding: '0.8rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px', marginTop: '5px' }}
+                                            className="chat-input-field"
                                             value={formData.bloco5.numeroDono}
                                             onChange={(e) => setFormData({...formData, bloco5: {...formData.bloco5, numeroDono: e.target.value}})}
+                                            placeholder="(00) 00000-0000"
                                         />
                                     </div>
                                     <div>
-                                        <label>Número do Jutaí:</label>
+                                        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>WhatsApp do Jutaí:</label>
                                         <input 
                                             type="text" 
-                                            style={{ width: '100%', padding: '0.8rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px', marginTop: '5px' }}
+                                            className="chat-input-field"
                                             value={formData.bloco5.numeroJutai}
                                             onChange={(e) => setFormData({...formData, bloco5: {...formData.bloco5, numeroJutai: e.target.value}})}
+                                            placeholder="(00) 00000-0000"
                                         />
                                     </div>
                                 </div>
-                                <div style={{ marginBottom: '1.5rem' }}>
-                                    <label>Como reagir a mensagens fora do assunto?</label>
+
+                                <div style={{ marginBottom: '2.5rem' }}>
+                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Resposta para mensagens fora do assunto:</label>
                                     <textarea 
-                                        style={{ width: '100%', padding: '1rem', background: '#222', border: '1px solid #444', color: 'white', borderRadius: '8px', marginTop: '5px' }}
+                                        className="chat-input-field"
+                                        style={{ minHeight: '100px' }}
                                         value={formData.bloco5.respostaOffTopic}
                                         onChange={(e) => setFormData({...formData, bloco5: {...formData.bloco5, respostaOffTopic: e.target.value}})}
+                                        placeholder="Ex: No momento só respondo sobre serviços da StetiCar..."
                                     />
                                 </div>
-                                <div style={{ display: 'flex', gap: '10px' }}>
-                                    <button onClick={handleBack} className="cta-button" style={{ background: '#444' }}>Voltar</button>
+
+                                <div style={{ display: 'flex', gap: '15px' }}>
+                                    <button onClick={handleBack} className="cta-button" style={{ background: '#f1f5f9', color: '#64748b' }}>Voltar</button>
                                     <button 
                                         onClick={handleSubmit} 
                                         className="cta-button" 
                                         disabled={isLoading}
-                                        style={{ opacity: isLoading ? 0.5 : 1 }}
                                     >
-                                        {isLoading ? 'Enviando...' : 'Finalizar e Enviar para Dashboard'}
+                                        {isLoading ? 'Enviando...' : 'Finalizar e Enviar ➜'}
                                     </button>
                                 </div>
                             </section>
