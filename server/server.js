@@ -27,7 +27,6 @@ const readFromJson = () => {
 const saveToJson = (respostas) => {
     try {
         const current = readFromJson();
-        // Salva com a mesma estrutura do Banco: { id, respostas, created_at }
         current.unshift({
             id: Date.now(),
             respostas: respostas, 
@@ -38,30 +37,59 @@ const saveToJson = (respostas) => {
     } catch (e) { console.error('Erro ao salvar JSON:', e); return false; }
 };
 
-// ... (configurações do banco permanecem as mesmas)
+// Configurações do Banco
+const dbConfig = {
+    host: process.env.MYSQLHOST || process.env.DB_HOST || 'mysql.railway.internal',
+    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD,
+    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'railway',
+    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306
+};
+
+let dbEnabled = false;
+let db;
+
+try {
+    const pool = mysql.createPool(dbConfig);
+    db = pool.promise();
+
+    pool.getConnection((err, conn) => {
+        if (err) {
+            console.error('AVISO: Banco de dados não disponível agora. Usando modo JSON de backup.');
+        } else {
+            console.log('SUCESSO: Conectado ao MySQL.');
+            dbEnabled = true;
+            conn.release();
+        }
+    });
+} catch (e) {
+    console.error('Falha crítica ao criar pool de conexões:', e.message);
+}
+
+app.get('/api/ping', (req, res) => res.json({ status: 'ok', time: new Date() }));
 
 app.post('/api/quiz', async (req, res) => {
     const { respostas } = req.body;
     let saved = false;
 
-    if (dbEnabled) {
+    if (dbEnabled && db) {
         try {
             await db.query('INSERT INTO quiz_responses (respostas) VALUES (?)', [JSON.stringify(respostas)]);
             saved = true;
         } catch (err) {
-            console.error('Falha ao salvar no banco, tentando JSON...', err.message);
+            console.error('Erro ao salvar no banco, tentando JSON...', err.message);
         }
     }
 
     if (!saved) {
         if (saveToJson(respostas)) {
-            return res.status(201).json({ message: 'Salvo em JSON (Backup)', mode: 'json' });
+            return res.status(201).json({ message: 'Salvo em JSON (Modo Backup)', mode: 'json' });
         } else {
             return res.status(500).json({ error: 'Erro ao salvar dados' });
         }
     }
 
-    res.status(201).json({ message: 'Salvo com sucesso no Banco', mode: 'db' });
+    res.status(201).json({ message: 'Salvo no Banco de Dados', mode: 'db' });
 });
 
 app.get('/api/quiz', async (req, res) => {
