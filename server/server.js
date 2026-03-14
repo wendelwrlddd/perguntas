@@ -6,18 +6,31 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Configuração de CORS mais agressiva para evitar bloqueios
+app.use(cors({
+    origin: '*', // Permite todas as origens para teste, ou você pode colocar seu link da Vercel aqui
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type']
+}));
+
 app.use(express.json());
 
-// Usar Pool de conexões para ser mais robusto
-const pool = mysql.createPool(process.env.MYSQL_PUBLIC_URL || {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    port: process.env.DB_PORT,
+// Priorizar as variáveis que o Railway injeta automaticamente
+const dbConfig = {
+    host: process.env.MYSQLHOST || process.env.DB_HOST || 'mysql.railway.internal',
+    user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+    password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD,
+    database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'railway',
+    port: process.env.MYSQLPORT || process.env.DB_PORT || 3306
+};
+
+console.log('Tentando conectar ao banco com:', { ...dbConfig, password: '***' });
+
+const pool = mysql.createPool({
+    ...dbConfig,
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 5,
     queueLimit: 0
 });
 
@@ -26,10 +39,9 @@ const db = pool.promise();
 // Verificar conexão inicial
 pool.getConnection((err, conn) => {
     if (err) {
-        console.error('ERRO CRÍTICO: Não foi possível conectar ao MySQL:', err.message);
+        console.error('ERRO DE CONEXÃO AO BANCO:', err.message);
     } else {
-        console.log('Sucesso: Conectado ao Pool do MySQL no Railway.');
-        
+        console.log('CONECTADO AO MYSQL COM SUCESSO!');
         const createTableQuery = `
             CREATE TABLE IF NOT EXISTS quiz_responses (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -37,11 +49,10 @@ pool.getConnection((err, conn) => {
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `;
-        
         conn.query(createTableQuery, (err) => {
             conn.release();
-            if (err) console.error('Erro ao verificar/criar tabela:', err);
-            else console.log('Tabela quiz_responses pronta.');
+            if (err) console.error('Erro ao criar tabela:', err);
+            else console.log('Tabela verificada.');
         });
     }
 });
@@ -50,10 +61,10 @@ app.post('/api/quiz', async (req, res) => {
     const { respostas } = req.body;
     try {
         const [result] = await db.query('INSERT INTO quiz_responses (respostas) VALUES (?)', [JSON.stringify(respostas)]);
-        res.status(201).json({ message: 'Quiz salvo com sucesso', id: result.insertId });
+        res.status(201).json({ message: 'Salvo com sucesso', id: result.insertId });
     } catch (err) {
-        console.error('Erro ao salvar quiz no banco:', err);
-        res.status(500).json({ error: 'Erro ao salvar no banco: ' + err.message });
+        console.error('Erro no POST /api/quiz:', err);
+        res.status(500).json({ error: 'Erro no banco: ' + err.message });
     }
 });
 
@@ -62,12 +73,12 @@ app.get('/api/quiz', async (req, res) => {
         const [results] = await db.query('SELECT * FROM quiz_responses ORDER BY created_at DESC');
         res.json(results);
     } catch (err) {
-        console.error('Erro ao buscar dados:', err);
+        console.error('Erro no GET /api/quiz:', err);
         res.status(500).json({ error: 'Erro ao buscar dados' });
     }
 });
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Servidor rodando e ouvindo em 0.0.0.0:${PORT}`);
+    console.log(`Servidor ativo na porta ${PORT}`);
 });

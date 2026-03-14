@@ -246,8 +246,26 @@ const App = () => {
                 ) : (
                     <div className="glass" style={{ padding: '4rem', textAlign: 'center', marginTop: '5rem' }}>
                         <h2 style={{ color: 'var(--primary)', fontSize: '3rem', marginBottom: '1rem' }}>🎉 Quiz Concluído!</h2>
-                        <p style={{ fontSize: '1.2rem', color: '#ccc' }}>Obrigado por responder. Suas diretrizes foram salvas e já podem ser visualizadas no Dashboard.</p>
-                        <button onClick={() => setView('dashboard')} className="cta-button" style={{ marginTop: '2rem' }}>Acessar Dashboard</button>
+                        <p style={{ fontSize: '1.2rem', color: '#ccc' }}>Obrigado por responder. Suas diretrizes foram processadas.</p>
+                        
+                        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center', marginTop: '2rem' }}>
+                            <button onClick={() => setView('dashboard')} className="cta-button">Ver Dashboard</button>
+                            
+                            <button 
+                                onClick={() => {
+                                    const blob = new Blob([JSON.stringify(formData, null, 2)], { type: 'application/json' });
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `config_steticar_${formData.bloco1.nomeAssistente || 'ia'}.json`;
+                                    a.click();
+                                }} 
+                                className="cta-button" 
+                                style={{ background: '#222', border: '1px solid var(--primary)' }}
+                            >
+                                Baixar Resumo (JSON)
+                            </button>
+                        </div>
                     </div>
                 )}
             </main>
